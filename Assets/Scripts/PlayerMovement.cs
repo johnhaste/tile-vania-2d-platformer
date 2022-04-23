@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
+
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float runSpeed = 10f;
+    [SerializeField] float jumpSpeed = 5f;
+
     Vector2 moveInput;
     Rigidbody2D myRigidBody;
-
     Animator myAnimator;
+    CapsuleCollider2D myCapsuleCollider;
 
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
+        myCapsuleCollider  = GetComponent<CapsuleCollider2D>();
     }
 
     // Update is called once per frame
@@ -37,6 +41,18 @@ public class PlayerMovement : MonoBehaviour
 
         //Updates animator (Could also be myAnimator.SetBool("isRunning", playerHasHorizontalSpeed);)
         myAnimator.SetBool("isRunning", true);
+    }
+
+    void OnJump(InputValue value){
+
+        //If not touching the groud
+        if(!myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){
+
+        }else{
+            if(value.isPressed){
+                myRigidBody.velocity += new Vector2(0f, jumpSpeed);
+            }
+        }
     }
 
     void FlipSprite(){
