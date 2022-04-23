@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 5f;
+    [SerializeField] float climbSpeed = 5f;
+    float playerGravity;
 
     Vector2 moveInput;
     Rigidbody2D myRigidBody;
@@ -16,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
+        //Gets current gravity
+        playerGravity = myRigidBody.gravityScale;
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider  = GetComponent<CapsuleCollider2D>();
     }
@@ -25,7 +29,27 @@ public class PlayerMovement : MonoBehaviour
     {
         //Always updates the player horizontal velocity
         Run();
+        ClimbLadder();
         FlipSprite();
+    }
+
+    void ClimbLadder()
+    {
+        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"))){
+            //When the player is climbing it shouldn't fall
+            myRigidBody.gravityScale = 0;
+            //Updates velocity according to the input
+            Vector2 climbVelocity = new Vector2 (myRigidBody.velocity.x, moveInput.y * climbSpeed);
+            myRigidBody.velocity = climbVelocity;
+            //Updates animation
+            myAnimator.SetBool("isClimbing", true);
+        }else{
+             //Updates animation
+            myAnimator.SetBool("isClimbing", false);
+            //When the player is NOT climbing it  fall
+            myRigidBody.gravityScale = playerGravity;
+        }
+        
     }
 
     void OnMove(InputValue value){
@@ -42,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
         //Updates animator (Could also be myAnimator.SetBool("isRunning", playerHasHorizontalSpeed);)
         myAnimator.SetBool("isRunning", true);
     }
+
+    
 
     void OnJump(InputValue value){
 
