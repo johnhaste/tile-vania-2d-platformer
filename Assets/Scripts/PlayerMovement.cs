@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D myRigidBody;
     Animator myAnimator;
     CapsuleCollider2D myCapsuleCollider;
+    BoxCollider2D myFeetCollider;
 
     void Start()
     {
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
         playerGravity = myRigidBody.gravityScale;
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider  = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -35,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ClimbLadder()
     {
-        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"))){
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"))){
             //When the player is climbing it shouldn't fall
             myRigidBody.gravityScale = 0;
             //Updates velocity according to the input
@@ -82,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value){
 
         //If not touching the groud
-        if(!myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){
+        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){
 
         }else{
             if(value.isPressed){
