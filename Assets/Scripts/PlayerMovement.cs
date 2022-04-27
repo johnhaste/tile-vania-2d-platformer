@@ -41,8 +41,18 @@ public class PlayerMovement : MonoBehaviour
             //Updates velocity according to the input
             Vector2 climbVelocity = new Vector2 (myRigidBody.velocity.x, moveInput.y * climbSpeed);
             myRigidBody.velocity = climbVelocity;
-            //Updates animation
-            myAnimator.SetBool("isClimbing", true);
+
+            //Checks if the player is moving vertically
+            bool playerHasVerticalSpeed = Mathf.Abs(myRigidBody.velocity.y) > Mathf.Epsilon;
+
+            if(playerHasVerticalSpeed){
+                //Updates animation
+                myAnimator.SetBool("isClimbing", true);
+            }else{
+                //Updates animation
+                myAnimator.SetBool("isClimbing", false);
+            }
+            
         }else{
              //Updates animation
             myAnimator.SetBool("isClimbing", false);
