@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Die(){
-        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemies")))
+        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
         {
             isAlive = false;
             myAnimator.SetTrigger("Dying");
