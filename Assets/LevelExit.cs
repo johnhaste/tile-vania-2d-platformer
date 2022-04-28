@@ -7,6 +7,9 @@ public class LevelExit : MonoBehaviour
 {
 
     int currentSceneIndex;
+    int nextSceneIndex;
+
+
     [SerializeField] Sprite openedDor;
     SpriteRenderer mySpriteRenderer;
 
@@ -15,7 +18,7 @@ public class LevelExit : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D col){
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        
         if(col.tag == "Player"){
             mySpriteRenderer.sprite = openedDor;
             StartCoroutine(LoadNextLevel());
@@ -24,6 +27,15 @@ public class LevelExit : MonoBehaviour
 
     IEnumerator LoadNextLevel(){
         yield return new WaitForSecondsRealtime(2f);
-        SceneManager.LoadScene(currentSceneIndex + 1);
+
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        nextSceneIndex = currentSceneIndex + 1;
+
+        if(nextSceneIndex == SceneManager.sceneCountInBuildSettings){
+            nextSceneIndex = 0;
+        }
+
+        FindObjectOfType<ScenePersist>().ResetScenePersist();
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }
